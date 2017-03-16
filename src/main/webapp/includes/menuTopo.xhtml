@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Inicio" url="/pages/Principal.xhtml" />
+
+			<p:submenu label="Cadastros">
+				<p:menuitem value="Processos" url="/pages/Processo.xhtml" />
+				<p:menuitem value="Contribuintes" url="/pages/Contribuinte.xhtml" />
+				<p:menuitem value="Funcionários" url="/pages/Funcionario.xhtml"
+					rendered="#{autenticacaoBean.permissao('ADMIN')}" />
+				<p:menuitem value="Usuários" url="/pages/Usuario.xhtml"
+					rendered="#{autenticacaoBean.permissao('ADMIN')}" />
+				<p:menuitem value="Setores" url="/pages/Setor.xhtml" />
+				<p:menuitem value="Tipos de Processo" url="/pages/Tipo.xhtml" />
+			</p:submenu>
+
+			<p:submenu label="Configuração"
+				rendered="#{autenticacaoBean.permissao('ADMIN')}">
+				<p:menuitem value="Backup" url="/pages/Backup.xhtml" />
+			</p:submenu>
+
+			<p:submenu label="Ajuda">
+				<p:menuitem value="Sobre" url="/pages/Sobre.xhtml" />
+				<p:separator />
+				<p:menuitem value="Sair" icon="ui-icon-extlink"
+					actionListener="#{autenticacaoBean.deslogar()}" />
+			</p:submenu>
+			<f:facet name="options">
+				<p:outputLabel value="#{autenticacaoBean.usuario.login} "
+					style="font-weight: bold" />
+				<p:commandButton value="Sair" icon="ui-icon-extlink"
+					actionListener="#{autenticacaoBean.deslogar()}" />
+			</f:facet>
+		</p:menubar>
+	</h:form>
+</ui:composition>

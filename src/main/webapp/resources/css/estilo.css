@@ -1,0 +1,42 @@
+@CHARSET "UTF-8";
+
+.formListagem{
+	font-size: 15px !important;
+}
+
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+body {
+	background-color: #FFFFFF;
+}
+
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 15px !important;
+}
+
+.ui-row-editor .ui-row-editor-pencil {
+	margin-left: 8px;
+}
+
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.year-spinner input {
+	width: 100px
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	display: none;
+}

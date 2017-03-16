@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<h:outputStylesheet library="css" name="estilo.css" />
+	<title>Buscar Processo</title>
+</h:head>
+<h:body>
+	<p:growl id="mensagem" />
+
+	<h:form id="formListagem">
+		<p:panel header="Buscar Processo">
+			<h:panelGrid id="painel" columns="2">
+				<p:outputLabel for="numero" value="N°. do Processo:" />
+				<p:inputText id="numero" size="15" maxlength="15"
+					value="#{buscarProcessoBean.processo.numero}" required="true"
+					requiredMessage="O campo 'N°. do Processo' é Obrigatório!" />
+
+				<p:outputLabel for="cpf" value="CPF: " />
+				<p:inputMask mask="999.999.999-99" id="cpf" size="12"
+					value="#{buscarProcessoBean.cpf}" required="true"
+					requiredMessage="O campo 'N°. do Processo' é Obrigatório!" />
+			</h:panelGrid>
+			<br />
+			<h:panelGrid columns="1">
+				<p:commandButton value="Consultar"
+					update=":mensagem :painelHistoricoProcesso"
+					actionListener="#{buscarProcessoBean.buscarProcesso()}" />
+			</h:panelGrid>
+		</p:panel>
+	</h:form>
+	<br />
+	<h:panelGroup layout="block" id="painelHistoricoProcesso">
+		<p:panel header="Historico do Processo"
+			rendered="#{buscarProcessoBean.exibirPainelHistorico}">
+			<h:panelGrid id="painelProceso" columns="2">
+				<p:outputLabel value="Processo N°.:" />
+				<p:outputLabel value="#{buscarProcessoBean.processo.numero}" />
+
+				<p:outputLabel value="Contribuinte:" />
+				<p:outputLabel
+					value="#{buscarProcessoBean.processo.contribuinte.nome}" />
+
+				<p:outputLabel value="CPF:" />
+				<p:outputLabel
+					value="#{buscarProcessoBean.processo.contribuinte.cpf}" />
+
+				<p:outputLabel value="Tipo:" />
+				<p:outputLabel value="#{buscarProcessoBean.processo.tipo.descricao}" />
+
+				<p:outputLabel value="Data do Processo:  " />
+				<p:outputLabel value="#{buscarProcessoBean.processo.dtProcesso}">
+					<f:convertDateTime locale="pt_BR" />
+				</p:outputLabel>
+
+				<p:outputLabel value="Situação:" />
+				<p:outputLabel value="#{buscarProcessoBean.processo.situacao}" />
+
+			</h:panelGrid>
+			<br />
+			<p:dataTable id="tabelaEncaminhamento"
+				emptyMessage="Nenhum registro encontrado." paginator="true" rows="5"
+				paginatorPosition="bottom"
+				value="#{buscarProcessoBean.encaminhamentos}" var="encaminhamento">
+				<p:column headerText="Indice" style="width: 7%">
+					<h:outputText
+						value="#{buscarProcessoBean.encaminhamentos.indexOf(encaminhamento)+1}" />
+				</p:column>
+
+				<p:column headerText="Setor" style="width: 35%">
+					<h:outputText value="#{encaminhamento.setor.descricao}" />
+				</p:column>
+
+				<p:column headerText="Data" style="width: 15%">
+					<h:outputText value="#{encaminhamento.dtEncaminhamento}">
+						<f:convertDateTime locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Observação">
+					<h:outputText value="#{encaminhamento.observacao}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</h:panelGroup>
+</h:body>
+</html>

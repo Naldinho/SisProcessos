@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form>
+		<p:panelMenu style="width:200px">
+			<p:submenu label="Usuário">
+				<p:menuitem value="Alterar" icon="ui-icon-arrowrefresh-1-w" url="/pages/paginaUsuarios.xhtml" />
+			</p:submenu>
+			
+			<p:submenu label="Produtos" >
+				<p:menuitem value="Atualizar Dados" url="/pages/produto.xhtml" icon="ui-icon-disk" />
+			</p:submenu>
+			
+			<p:submenu label="Clientes">
+				<p:menuitem value="Salvar" icon="ui-icon-disk" />
+				<p:menuitem value="Alterar" icon="ui-icon-arrowrefresh-1-w" />
+				<p:menuitem value="Excluir" icon="ui-icon-close" />
+			</p:submenu>
+			
+			<p:submenu label="Ajuda">
+				<p:menuitem value="Sobre" icon="ui-icon-document" />
+			</p:submenu>
+		</p:panelMenu>
+	</h:form>
+
+</ui:composition> 

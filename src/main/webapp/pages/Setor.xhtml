@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/templateSistema.xhtml">
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuTopo.xhtml" />
+	</ui:define>
+
+	<ui:define name="menuEsquerdo">
+		<ui:include src="/includes/menuEsquerdo.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="formListagem">
+			<p:panel header="Setores">
+				<p:dataTable id="tabela" emptyMessage="Nenhum registro encontrado."
+					paginator="true" value="#{setorBean.setores}" var="setor" rows="10"
+					paginatorPosition="bottom">
+					<f:facet name="header">
+						<p:commandButton value="Novo" actionListener="#{setorBean.novo()}"
+							oncomplete="PF('dlgNovo').show();" update=":formCadastro:painel">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+					</f:facet>
+
+					<p:column headerText="Código" sortBy="#{setor.codigo}">
+						<h:outputText value="#{setor.codigo}" />
+					</p:column>
+
+					<p:column headerText="Descrição" sortBy="#{setor.descricao}"
+						filterBy="#{setor.descricao}">
+						<h:outputText value="#{setor.descricao}" />
+					</p:column>
+
+					<p:column headerText="Opções">
+						<p:commandButton id="btnEditar" icon="ui-icon-pencil"
+							actionListener="#{setorBean.editar(setor)}"
+							oncomplete="PF('dlgNovo').show();" update="formCadastro:painel">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+						<p:tooltip id="ttEditar" for="btnEditar" value="Editar"
+							position="top" />
+
+						<p:commandButton id="btnExcluir" icon="ui-icon-trash"
+							actionListener="#{setorBean.excluir(setor)}"
+							update=":mensagem :formListagem:tabela">
+							<p:confirm header="Confirmação" message="Deseja excluir o setor?"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:tooltip id="ttExcluir" for="btnExcluir" value="Excluir"
+							position="top" />
+					</p:column>
+				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="dlgNovo">
+		<p:dialog header="Cadastro - Setor" widgetVar="dlgNovo"
+			draggable="false" resizable="false" modal="true">
+			<h:form id="formCadastro">
+				<h:panelGrid id="painel" columns="2">
+					<p:outputLabel for="desc" value="Descrição: " />
+					<p:inputText id="desc" size="30" maxlength="50"
+						value="#{setorBean.setor.descricao}" required="true"
+						requiredMessage="O campo 'Descrição' é Obrigatório!"
+						converter="converterMaiusculo">
+					</p:inputText>
+				</h:panelGrid>
+				<br/>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Salvar"
+						actionListener="#{setorBean.salvar()}"
+						update=":mensagem :formCadastro:painel :formListagem:tabela" />
+					<p:commandButton value="Cancelar"
+						oncomplete="PF('dlgNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

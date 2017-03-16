@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/templateSistema.xhtml">
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuTopo.xhtml" />
+	</ui:define>
+
+	<ui:define name="menuEsquerdo">
+		<ui:include src="/includes/menuEsquerdo.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="formListagem">
+			<p:panel header="Funcionários">
+				<p:dataTable id="tabela" emptyMessage="Nenhum registro encontrado."
+					paginator="true" value="#{funcionarioBean.funcionarios}"
+					var="funcionario" rows="10" paginatorPosition="bottom">
+					<f:facet name="header">
+						<p:commandButton value="Novo"
+							actionListener="#{funcionarioBean.novo()}"
+							oncomplete="PF('dlgNovo').show();"
+							update=":mensagem :formCadastro:painel">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+					</f:facet>
+
+					<p:column headerText="Código" sortBy="#{funcionario.codigo}">
+						<h:outputText value="#{funcionario.codigo}" />
+					</p:column>
+
+					<p:column headerText="Nome" sortBy="#{funcionario.nome}"
+						filterBy="#{funcionarioe.nome}">
+						<h:outputText value="#{funcionario.nome}" />
+					</p:column>
+
+					<p:column headerText="CPF" sortBy="#{funcionario.cpf}"
+						filterBy="#{funcionario.cpf}">
+						<h:outputText value="#{funcionario.cpf}" />
+					</p:column>
+
+					<p:column headerText="Sexo" sortBy="#{funcionario.sexo}">
+						<h:outputText value="#{funcionario.sexo}" />
+					</p:column>
+
+					<p:column headerText="Telefone" sortBy="#{funcionario.tel}">
+						<h:outputText value="#{funcionario.tel}" />
+					</p:column>
+
+					<p:column headerText="Data de Nascimento"
+						sortBy="#{funcionario.dtNasc}">
+						<h:outputText value="#{funcionario.dtNasc}">
+							<f:convertDateTime locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Setor"
+						sortBy="#{funcionario.setor.descricao}"
+						filterBy="#{funcionario.setor.descricao}">
+						<h:outputText value="#{funcionario.setor.descricao}" />
+					</p:column>
+
+					<p:column headerText="Opções">
+						<p:commandButton id="btnEditar" icon="ui-icon-pencil"
+							actionListener="#{funcionarioBean.editar(funcionario)}"
+							oncomplete="PF('dlgNovo').show();"
+							update=":mensagem formCadastro:painel">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+						<p:tooltip id="ttEditar" for="btnEditar" value="Editar"
+							position="top" />
+
+						<p:commandButton id="btnExcluir" icon="ui-icon-trash"
+							actionListener="#{funcionarioBean.excluir(funcionario)}"
+							update=":mensagem :formListagem:tabela">
+							<p:confirm header="Confirmação"
+								message="Deseja excluir o funcionário?" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:tooltip id="ttExcluir" for="btnExcluir" value="Excluir"
+							position="top" />
+					</p:column>
+				</p:dataTable>
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="dlgNovo">
+		<p:dialog header="Cadastro - Funcionário" widgetVar="dlgNovo"
+			draggable="false" resizable="false" modal="true">
+			<h:form id="formCadastro">
+				<h:panelGrid id="painel" columns="2">
+					<p:outputLabel for="nome" value="Nome: " />
+					<p:inputText id="nome" size="30" maxlength="50"
+						value="#{funcionarioBean.funcionario.nome}" required="true"
+						requiredMessage="O campo 'Nome' é Obrigatório!" />
+
+					<p:outputLabel for="cpf" value="CPF: " />
+					<p:inputMask mask="999.999.999-99" id="cpf" size="15"
+						value="#{funcionarioBean.funcionario.cpf}" required="true"
+						requiredMessage="O campo 'CPF' é Obrigatório!" />
+
+					<p:outputLabel for="sexo" value="Sexo: " />
+					<p:selectOneMenu id="sexo"
+						value="#{funcionarioBean.funcionario.sexo}" required="true"
+						requiredMessage="O campo 'Sexo' é Obrigatório!">
+						<f:selectItem itemValue="" itemLabel="Selecione..." />
+						<f:selectItem itemValue="M" itemLabel="Masculino" />
+						<f:selectItem itemValue="F" itemLabel="Feminino" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="dtNasc" value="Data de Nascimento " />
+					<p:inputMask mask="99/99/9999" id="dtNasc" size="8"
+						value="#{funcionarioBean.funcionario.dtNasc}" required="true"
+						requiredMessage="O campo 'Data de Nascimento' é Obrigatório!">
+						<f:convertDateTime locale="pt_BR" />
+					</p:inputMask>
+
+					<p:outputLabel for="tel" value="Telefone: " />
+					<p:inputMask mask="(99)9999-9999" id="tel" size="10"
+						value="#{funcionarioBean.funcionario.tel}" />
+
+					<p:outputLabel for="cel" value="Celular: " />
+					<p:inputMask mask="(99)99999-9999" id="cel" size="10"
+						value="#{funcionarioBean.funcionario.cel}" />
+
+					<p:outputLabel for="dtAdmissao" value="Data de Admissão " />
+					<p:inputMask mask="99/99/9999" id="dtAdmissao" size="8"
+						value="#{funcionarioBean.funcionario.dtAdmissao}" required="true"
+						requiredMessage="O campo 'Data de Admissão' é Obrigatório!">
+						<f:convertDateTime locale="pt_BR" />
+					</p:inputMask>
+
+					<p:outputLabel for="setor" value="Setor: " />
+					<p:selectOneMenu id="setor"
+						value="#{funcionarioBean.funcionario.setor}" filter="true"
+						converter="omnifaces.SelectItemsConverter" required="true"
+						requiredMessage="O campo 'Setor' é Obrigatório!">
+						<f:selectItem noSelectionOption="true" itemLabel="Selecione..." />
+						<f:selectItems value="#{funcionarioBean.setores}" var="setor"
+							itemValue="#{setor}" itemLabel="#{setor.descricao}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<br/>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Salvar"
+						actionListener="#{funcionarioBean.salvar()}"
+						update=":mensagem :formCadastro:painel :formListagem:tabela" />
+					<p:commandButton value="Cancelar"
+						oncomplete="PF('dlgNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

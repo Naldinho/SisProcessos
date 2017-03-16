@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/templateSistema.xhtml">
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuTopo.xhtml" />
+	</ui:define>
+
+	<ui:define name="menuEsquerdo">
+		<ui:include src="/includes/menuEsquerdo.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="formListagem">
+			<p:panel header="Contribuintes">
+				<p:dataTable id="tabela" emptyMessage="Nenhum registro encontrado."
+					paginator="true" value="#{contribuinteBean.contribuintes}"
+					var="contribuinte" rows="10" paginatorPosition="bottom">
+					<f:facet name="header">
+						<p:commandButton value="Novo"
+							actionListener="#{contribuinteBean.novo()}"
+							oncomplete="PF('dlgNovo').show();" update=":formCadastro:painel">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+					</f:facet>
+
+					<p:column headerText="Código" sortBy="#{contribuinte.codigo}">
+						<h:outputText value="#{contribuinte.codigo}" />
+					</p:column>
+
+					<p:column headerText="Nome" sortBy="#{contribuinte.nome}"
+						filterBy="#{contribuinte.nome}">
+						<h:outputText value="#{contribuinte.nome}" />
+					</p:column>
+
+					<p:column headerText="CPF" sortBy="#{contribuinte.cpf}">
+						<h:outputText value="#{contribuinte.cpf}" />
+					</p:column>
+
+					<p:column headerText="Sexo" sortBy="#{contribuinte.sexo}">
+						<h:outputText value="#{contribuinte.sexo}" />
+					</p:column>
+
+					<p:column headerText="Telefone" sortBy="#{contribuinte.tel}">
+						<h:outputText value="#{contribuinte.tel}" />
+					</p:column>
+
+					<p:column headerText="Data de Nascimento"
+						sortBy="#{contribuinte.dtNasc}">
+						<h:outputText value="#{contribuinte.dtNasc}">
+							<f:convertDateTime locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Opções">
+						<p:commandButton id="btnEditar" icon="ui-icon-pencil"
+							actionListener="#{contribuinteBean.editar(contribuinte)}"
+							oncomplete="PF('dlgNovo').show();" update="formCadastro:painel">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+						<p:tooltip id="ttEditar" for="btnEditar" value="Editar"
+							position="top" />
+
+						<p:commandButton id="btnExcluir" icon="ui-icon-trash"
+							actionListener="#{contribuinteBean.excluir(contribuinte)}"
+							update=":mensagem :formListagem:tabela">
+							<p:confirm header="Confirmação"
+								message="Deseja excluir o contribuinte?" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:tooltip id="ttExcluir" for="btnExcluir" value="Excluir"
+							position="top" />
+					</p:column>
+				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="dlgNovo">
+		<p:dialog header="Cadastro - Contribuinte" widgetVar="dlgNovo"
+			draggable="false" resizable="false" modal="true">
+			<h:form id="formCadastro">
+				<h:panelGrid id="painel" columns="2">
+					<p:outputLabel for="nome" value="Nome: " />
+					<p:inputText id="nome" size="40" maxlength="50"
+						value="#{contribuinteBean.contribuinte.nome}" required="true"
+						requiredMessage="O campo 'Nome' é Obrigatório!" />
+
+					<p:outputLabel for="cpf" value="CPF: " />
+					<p:inputMask mask="999.999.999-99" id="cpf" size="10"
+						value="#{contribuinteBean.contribuinte.cpf}" required="true"
+						requiredMessage="O campo 'CPF' é Obrigatório!"/>
+
+					<p:outputLabel for="sexo" value="Sexo: " />
+					<p:selectOneMenu id="sexo"
+						value="#{contribuinteBean.contribuinte.sexo}" required="true"
+						requiredMessage="O campo 'Sexo' é Obrigatório!">
+						<f:selectItem noSelectionOption="true" itemLabel="Selecione..." />
+						<f:selectItem itemValue="M" itemLabel="Masculino" />
+						<f:selectItem itemValue="F" itemLabel="Feminino" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="dtNasc" value="Data de Nascimento " />
+					<p:inputMask mask="99/99/9999" id="dtNasc" size="8"
+						value="#{contribuinteBean.contribuinte.dtNasc}" required="true"
+						requiredMessage="O campo 'Data de Nascimento' é Obrigatório!">
+						<f:convertDateTime locale="pt_BR" />
+					</p:inputMask>
+
+					<p:outputLabel for="tel" value="Telefone: " />
+					<p:inputMask mask="(99)9999-9999" id="tel" size="10"
+						value="#{contribuinteBean.contribuinte.tel}" />
+
+					<p:outputLabel for="cel" value="Celular: " />
+					<p:inputMask mask="(99)99999-9999" id="cel" size="10"
+						value="#{contribuinteBean.contribuinte.cel}" />
+
+					<p:outputLabel for="bairro" value="Bairro: " />
+					<p:inputText id="bairro" size="20" maxlength="40"
+						value="#{contribuinteBean.contribuinte.bairro}" required="true"
+						requiredMessage="O campo 'Bairro' é Obrigatório!" />
+
+					<p:outputLabel for="cidade" value="Cidade: " />
+					<p:inputText id="cidade" size="20" maxlength="40"
+						value="#{contribuinteBean.contribuinte.cidade}" required="true"
+						requiredMessage="O campo 'Cidade' é Obrigatório!" />
+
+					<p:outputLabel for="uf" value="UF: " />
+					<p:selectOneMenu id="uf"
+						value="#{contribuinteBean.contribuinte.uf}" required="true"
+						requiredMessage="O campo 'UF' é Obrigatório!">
+						<f:selectItem noSelectionOption="true" itemLabel=" " />
+						<f:selectItems value="#{contribuinteBean.estados}" var="estado"
+							itemValue="#{estado}" itemLabel="#{estado}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<br/>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Salvar"
+						actionListener="#{contribuinteBean.salvar()}"
+						update=":mensagem :formCadastro:painel :formListagem:tabela" />
+					<p:commandButton value="Cancelar"
+						oncomplete="PF('dlgNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

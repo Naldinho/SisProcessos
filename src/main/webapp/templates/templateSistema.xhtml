@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>Sistema de Processos</title>
+	<h:outputStylesheet library="css" name="estilo.css" />
+</h:head>
+<h:body>
+	<p:growl id="mensagem" />
+
+	<p:layout fullPage="true" >
+		<p:layoutUnit position="north" size="120" resizable="false"
+			closable="true" collapsible="true">
+			<h2>Sistema de Processos</h2>
+			<ui:insert name="cabecalho" />
+		</p:layoutUnit>
+		
+		<p:layoutUnit position="west" header="MENU" resizable="true"
+			size="220" collapsible="true">
+			<ui:insert name="menuEsquerdo" />
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+			<ui:insert name="conteudo" />
+		</p:layoutUnit>
+
+		<p:layoutUnit position="south">
+			<ui:insert name="rodape" />
+		</p:layoutUnit>
+	</p:layout>
+
+	<ui:insert name="dlgNovo" />
+</h:body>
+</html>

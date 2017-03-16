@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/templateSistema.xhtml">
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuTopo.xhtml" />
+	</ui:define>
+
+	<ui:define name="menuEsquerdo">
+		<ui:include src="/includes/menuEsquerdo.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<p:panel header="Backup">
+			<h:form>
+				<br />
+				<h:panelGrid columns="1" width="100%" style="text-align: center;">
+					<p:outputLabel
+						value="Selecione a pasta onde desaja salvar o backup." />
+					<br />
+					<p:commandButton value="Fazer backup" update=":mensagem"
+						actionListener="#{backupBean.fazerBackup()}" />
+				</h:panelGrid>
+			</h:form>
+		</p:panel>
+
+		<p:panel header="Restaure">
+			<br />
+			<h:form>
+				<h:panelGrid columns="1" width="100%" style="text-align: center;">
+					<p:outputLabel value="Selecione o arquivo de backup." />
+					<br />
+					<p:commandButton value="Restaurar backup" update=":mensagem"
+						actionListener="#{backupBean.restaurarBackup()}" />
+				</h:panelGrid>
+				<br />
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>

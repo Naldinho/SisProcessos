@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/templateSistema.xhtml">
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuTopo.xhtml" />
+	</ui:define>
+
+	<ui:define name="menuEsquerdo">
+		<ui:include src="/includes/menuEsquerdo.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<p:panel header="Sobre">
+			<h:panelGrid columns="1" width="100%" style="text-align: center;">
+				<br />
+				<p:outputLabel value="Faculdade Sete de Setembro" />
+				<p:outputLabel value="Curso Sistemas da Informação" />
+				<br />
+				<p:outputLabel value="Equipe:" style="font-weight: bold" />
+				<p:outputLabel value="Lourinaldo Silva" />
+				<p:outputLabel value="Maírla Pereira" />
+				<p:outputLabel value="Jean Michel" />
+				<br />
+			</h:panelGrid>
+		</p:panel>
+	</ui:define>
+</ui:composition>

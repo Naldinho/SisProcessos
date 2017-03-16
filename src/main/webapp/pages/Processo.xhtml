@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/templateSistema.xhtml">
+
+	<ui:define name="cabecalho">
+		<ui:include src="/includes/menuTopo.xhtml" />
+	</ui:define>
+
+	<ui:define name="menuEsquerdo">
+		<ui:include src="/includes/menuEsquerdo.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="formListagem">
+			<p:panel header="Processos">
+				<p:dataTable id="tabela" emptyMessage="Nenhum registro encontrado."
+					paginator="true" value="#{processoBean.processos}" var="processo"
+					rows="10" paginatorPosition="bottom">
+					<f:facet name="header">
+						<p:commandButton value="Novo"
+							actionListener="#{processoBean.novo()}"
+							oncomplete="PF('dlgNovo').show();"
+							update=":mensagem :formCadastro:painel">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+					</f:facet>
+
+					<p:column headerText="Código" sortBy="#{processo.codigo}">
+						<h:outputText value="#{processo.codigo}" />
+					</p:column>
+
+					<p:column headerText="Número do Processo"
+						sortBy="#{processo.numero}" filterBy="#{processo.numero}">
+						<h:outputText value="#{processo.numero}" />
+					</p:column>
+
+					<p:column headerText="Contribuinte"
+						sortBy="#{processo.contribuinte.nome}"
+						filterBy="#{processo.contribuinte.nome}">
+						<h:outputText value="#{processo.contribuinte.nome}" />
+					</p:column>
+
+					<p:column headerText="CPF" sortBy="#{processo.contribuinte.cpf}"
+						filterBy="#{processo.contribuinte.cpf}">
+						<h:outputText value="#{processo.contribuinte.cpf}" />
+					</p:column>
+
+					<p:column headerText="Tipo" sortBy="#{processo.tipo.descricao}"
+						filterBy="#{processo.tipo.descricao}">
+						<h:outputText value="#{processo.tipo.descricao}" />
+					</p:column>
+
+					<p:column headerText="Data do Processo"
+						sortBy="#{processo.dtProcesso}">
+						<h:outputText value="#{processo.dtProcesso}">
+							<f:convertDateTime locale="pt_BR" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Situação" sortBy="#{processo.situacao}">
+						<h:outputText value="#{processo.situacao}" />
+					</p:column>
+
+					<p:column headerText="Opções">
+						<p:commandButton id="btnEncaminhar"
+							icon="ui-icon-transferthick-e-w"
+							actionListener="#{encaminhamentoBean.encaminhar(processo)}"
+							oncomplete="PF('dlgEncaminhamento').show();"
+							update=":mensagem formEncaminhamento">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+						<p:tooltip id="ttEncaminhar" for="btnEncaminhar"
+							value="Encaminhar" position="top" />
+
+						<p:commandButton id="btnVisualizarEncaminhamentos"
+							icon="ui-icon-search"
+							actionListener="#{encaminhamentoBean.visualizarEncaminhamentos(processo)}"
+							oncomplete="PF('dlgVisualizarEncaminhamentos').show();"
+							update=":mensagem :painelEncaminhamento :tabelaEncaminhamento" />
+						<p:tooltip id="ttVisualizarEncaminhamentos"
+							for="btnVisualizarEncaminhamentos"
+							value="Visualizar Encaminhamentos" position="top" />
+
+						<p:commandButton id="btnEditar" icon="ui-icon-pencil"
+							actionListener="#{processoBean.editar(processo)}"
+							oncomplete="PF('dlgNovo').show();"
+							update=":mensagem formCadastro:painel">
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+						<p:tooltip id="ttEditar" for="btnEditar" value="Editar"
+							position="top" />
+
+						<p:commandButton id="btnExcluir" icon="ui-icon-trash"
+							actionListener="#{processoBean.excluir(processo)}"
+							update=":mensagem :formListagem:tabela">
+							<p:confirm header="Confirmação"
+								message="Deseja excluir o processo?" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:tooltip id="ttExcluir" for="btnExcluir" value="Excluir"
+							position="top" />
+
+					</p:column>
+				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="dlgNovo">
+		<p:dialog header="Cadastro - Processo" widgetVar="dlgNovo"
+			draggable="false" resizable="false" modal="true">
+			<h:form id="formCadastro">
+				<h:panelGrid id="painel" columns="2">
+					<p:outputLabel for="numero" value="Número do Processo: " />
+					<p:inputText id="numero" size="15" maxlength="15"
+						value="#{processoBean.processo.numero}" required="true"
+						requiredMessage="O campo 'Número do Processo' é Obrigatório!" />
+
+					<p:outputLabel for="contribuinte" value="Contribuinte: " />
+					<p:selectOneMenu id="contribuinte"
+						value="#{processoBean.processo.contribuinte}" filter="true"
+						converter="omnifaces.SelectItemsConverter" required="true"
+						requiredMessage="O campo 'Contribuinte' é Obrigatório!">
+						<f:selectItem noSelectionOption="true" itemLabel="Selecione..." />
+						<f:selectItems value="#{processoBean.contribuintes}"
+							var="contribuinte" itemValue="#{contribuinte}"
+							itemLabel="#{contribuinte.nome} - #{contribuinte.cpf}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="tipo" value="Tipo do Processo: " />
+					<p:selectOneMenu id="tipo" value="#{processoBean.processo.tipo}"
+						filter="true" converter="omnifaces.SelectItemsConverter"
+						required="true"
+						requiredMessage="O campo 'Tipo do Processo' é Obrigatório!">
+						<f:selectItem noSelectionOption="true" itemLabel="Selecione..." />
+						<f:selectItems value="#{processoBean.tipos}" var="tipo"
+							itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="dtProcesso" value="Data do Processo " />
+					<p:inputMask mask="99/99/9999" id="dtProcesso" size="8"
+						value="#{processoBean.processo.dtProcesso}" required="true"
+						requiredMessage="O campo 'Data do Processo' é Obrigatório!">
+						<f:convertDateTime locale="pt_BR" />
+					</p:inputMask>
+
+					<p:outputLabel for="situacao" value="Situação: " />
+					<p:inputText id="situacao" size="10" required="true"
+						requiredMessage="O campo 'Situação' é Obrigatório!"
+						value="#{processoBean.processo.situacao}" />
+				</h:panelGrid>
+				<br />
+				<h:panelGrid columns="2">
+					<p:commandButton value="Salvar"
+						actionListener="#{processoBean.salvar()}"
+						update=":mensagem :formCadastro:painel :formListagem:tabela" />
+					<p:commandButton value="Cancelar"
+						oncomplete="PF('dlgNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Encaminhamento de Processo"
+			widgetVar="dlgEncaminhamento" draggable="false" resizable="false"
+			modal="true">
+			<h:form id="formEncaminhamento">
+				<h:panelGrid id="painelProcesso" columns="2">
+					<p:outputLabel value="Processo N°.:" />
+					<p:outputLabel value="#{encaminhamentoBean.processo.numero}" />
+
+					<p:outputLabel value="Contribuinte:" />
+					<p:outputLabel
+						value="#{encaminhamentoBean.processo.contribuinte.nome}" />
+
+					<p:outputLabel value="CPF:" />
+					<p:outputLabel
+						value="#{encaminhamentoBean.processo.contribuinte.cpf}" />
+				</h:panelGrid>
+				<hr />
+				<h:panelGrid id="painel" columns="2">
+					<p:outputLabel for="setor" value="Setor: " />
+					<p:selectOneMenu id="setor"
+						value="#{encaminhamentoBean.encaminhamento.setor}" filter="true"
+						converter="omnifaces.SelectItemsConverter" required="true"
+						requiredMessage="O campo 'Setor' é Obrigatório!">
+						<f:selectItem noSelectionOption="true" itemLabel="Selecione..." />
+						<f:selectItems value="#{encaminhamentoBean.setores}" var="setor"
+							itemValue="#{setor}" itemLabel="#{setor.descricao}" />
+						<p:ajax listener="#{encaminhamentoBean.comboDependente()}"
+							update=":formEncaminhamento:responsavel" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="responsavel" value="Responsável: " />
+					<p:selectOneMenu id="responsavel"
+						value="#{encaminhamentoBean.encaminhamento.responsavel}"
+						filter="true" converter="omnifaces.SelectItemsConverter"
+						required="true"
+						requiredMessage="O campo 'Responsável' é Obrigatório!">
+						<f:selectItem noSelectionOption="true" itemLabel="Selecione..." />
+						<f:selectItems value="#{encaminhamentoBean.responsaveis}"
+							var="funcionario" itemValue="#{funcionario}"
+							itemLabel="#{funcionario.nome}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="dtEncaminhamento"
+						value="Data do Encaminhamento " />
+					<p:inputMask mask="99/99/9999" id="dtEncaminhamento" size="8"
+						value="#{encaminhamentoBean.encaminhamento.dtEncaminhamento}"
+						required="true"
+						requiredMessage="O campo 'Data do Encaminhamento' é Obrigatório!">
+						<f:convertDateTime locale="pt_BR" />
+					</p:inputMask>
+
+					<p:outputLabel for="obs" value="Observação: " />
+					<p:inputTextarea id="obs" rows="5" cols="40"
+						value="#{encaminhamentoBean.encaminhamento.observacao}" />
+				</h:panelGrid>
+				<br />
+				<h:panelGrid columns="2">
+					<p:commandButton value="Salvar"
+						actionListener="#{encaminhamentoBean.salvar()}"
+						update=":mensagem :formEncaminhamento:painel :formListagem:tabela" />
+					<p:commandButton value="Cancelar"
+						oncomplete="PF('dlgEncaminhamento').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Processo Encaminhado"
+			widgetVar="dlgVisualizarEncaminhamentos" draggable="false"
+			resizable="false" modal="true">
+
+			<h:panelGrid id="painelEncaminhamento" columns="2">
+				<p:outputLabel value="Processo N°.:" />
+				<p:outputLabel value="#{encaminhamentoBean.processo.numero}" />
+
+				<p:outputLabel value="Contribuinte:" />
+				<p:outputLabel
+					value="#{encaminhamentoBean.processo.contribuinte.nome}" />
+
+				<p:outputLabel value="CPF:" />
+				<p:outputLabel
+					value="#{encaminhamentoBean.processo.contribuinte.cpf}" />
+
+				<p:outputLabel value="Tipo:" />
+				<p:outputLabel value="#{encaminhamentoBean.processo.tipo.descricao}" />
+
+				<p:outputLabel value="Data do Processo:" />
+				<p:outputLabel value="#{encaminhamentoBean.processo.dtProcesso}">
+					<f:convertDateTime locale="pt_BR" />
+				</p:outputLabel>
+
+				<p:outputLabel value="Situação:" />
+				<p:outputLabel value="#{encaminhamentoBean.processo.situacao}" />
+			</h:panelGrid>
+			<br />
+			<p:dataTable id="tabelaEncaminhamento"
+				emptyMessage="Nenhum registro encontrado." paginator="true" rows="5"
+				paginatorPosition="bottom" style="width: 700px"
+				value="#{encaminhamentoBean.encaminhamentos}" var="encaminhamento">
+				<p:column headerText="Indice">
+					<h:outputText
+						value="#{encaminhamentoBean.encaminhamentos.indexOf(encaminhamento)+1}" />
+				</p:column>
+
+				<p:column headerText="Setor">
+					<h:outputText value="#{encaminhamento.setor.descricao}" />
+				</p:column>
+
+				<p:column headerText="Responsavel">
+					<h:outputText value="#{encaminhamento.responsavel.nome}" />
+				</p:column>
+
+				<p:column headerText="Data">
+					<h:outputText value="#{encaminhamento.dtEncaminhamento}">
+						<f:convertDateTime locale="pt_BR" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Observação">
+					<h:outputText value="#{encaminhamento.observacao}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>
